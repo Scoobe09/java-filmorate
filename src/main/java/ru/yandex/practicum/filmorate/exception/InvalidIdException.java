@@ -9,5 +9,4 @@ public class InvalidIdException extends RuntimeException {
         super(message);
         this.httpStatus = httpStatus;
     }
-
 }

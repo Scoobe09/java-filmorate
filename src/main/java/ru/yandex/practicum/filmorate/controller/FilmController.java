@@ -23,15 +23,17 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> findAll() {
+    public Collection<Film> findAllFilms() {
+        log.info("Не удалось получить список всех фильмов.");
         return films.values();
     }
 
 
     @PostMapping
-    public Film create(@Valid @RequestBody Film film) {
+    public Film createFilm(@Valid @RequestBody Film film) {
         film.setId(generateId());
         films.put(film.getId(), film);
+        log.info("Не удалось создать фильм.");
         return film;
     }
 
@@ -39,8 +41,10 @@ public class FilmController {
     public Film put(@Valid @RequestBody Film film) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
+            log.info("Не удалось поместить фильм");
             return film;
         } else {
+            log.info("Не удалось поместить фильм");
             throw new InvalidIdException("Фильм с ID: " + film.getId() + " не обновлён", HttpStatus.NOT_FOUND);
         }
     }
