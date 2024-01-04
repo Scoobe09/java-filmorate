@@ -23,26 +23,31 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> findAll() {
+    public Collection<User> findAllUsers() {
+        log.info("Не удалось получить список всех пользователей.");
         return users.values();
+
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         validateName(user);
         user.setId(generateId());
         users.put(user.getId(), user);
+        log.info("Не удалось создать пользователя");
         return user;
     }
 
     @PutMapping
-    public User put(@Valid @RequestBody User user) {
+    public User putUser(@Valid @RequestBody User user) {
         validateName(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
+            log.info("Не удалось поместить пользователя");
             return user;
         } else {
-            throw new InvalidIdException("Пользователь с ID: " + user.getId() + " не обновлён", HttpStatus.NOT_FOUND);
+            log.error("Не удалось поместить пользователя");
+            throw new InvalidIdException(String.format("Пользователь с ID:`%d` не обновлён", user.getId()), HttpStatus.NOT_FOUND);
         }
     }
 
