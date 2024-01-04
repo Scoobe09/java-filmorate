@@ -38,14 +38,14 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film put(@Valid @RequestBody Film film) {
+    public Film putFilm(@Valid @RequestBody Film film) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             log.info("Не удалось поместить фильм");
             return film;
         } else {
-            log.info("Не удалось поместить фильм");
-            throw new InvalidIdException("Фильм с ID: " + film.getId() + " не обновлён", HttpStatus.NOT_FOUND);
+            log.error("Не удалось поместить фильм");
+            throw new InvalidIdException(String.format("Фильм с ID:`%d` не обновлён", film.getId()), HttpStatus.NOT_FOUND);
         }
     }
 }
