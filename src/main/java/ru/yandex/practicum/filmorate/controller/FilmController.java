@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.util.Collection;
 import java.util.List;
 
 import static ru.yandex.practicum.filmorate.constant.FilmConstants.COUNT_OF_POPULAR_FILMS;
@@ -50,11 +49,11 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-         service.addLike(id, userId);
+        service.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
-         service.removeLike(id, userId);
+        service.removeLike(id, userId);
     }
 }

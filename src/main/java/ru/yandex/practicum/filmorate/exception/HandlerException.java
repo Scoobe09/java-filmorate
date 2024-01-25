@@ -17,7 +17,7 @@ public class HandlerException {
         log.error("Ваш параметр не найден. {}", exp.getMessage());
         return new ResponseEntity<>(ErrorResponse.builder()
                 .message(exp.getMessage())
-                .build(),exp.getHttpStatus());
+                .build(), exp.getHttpStatus());
     }
 
     @ExceptionHandler(ValidateException.class)

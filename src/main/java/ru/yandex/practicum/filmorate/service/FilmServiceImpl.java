@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.validators.ValidationUtil;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service

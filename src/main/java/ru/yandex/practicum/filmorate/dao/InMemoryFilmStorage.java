@@ -17,7 +17,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return ++id;
     }
 
-@Override
+    @Override
     public List<Film> findAllFilms() {
         return new ArrayList<>(films.values());
     }
@@ -42,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void deleteById(Integer id) {
-            films.remove(id);
+        films.remove(id);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean isExist(Integer id){
+    public boolean isExist(Integer id) {
         return films.containsKey(id);
     }
 }
