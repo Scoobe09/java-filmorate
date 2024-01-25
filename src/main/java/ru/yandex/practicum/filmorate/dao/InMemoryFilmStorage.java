@@ -1,9 +1,7 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -20,8 +18,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
 @Override
-    public Collection<Film> findAllFilms() {
-        return films.values();
+    public List<Film> findAllFilms() {
+        return new ArrayList<>(films.values());
     }
 
     @Override
@@ -32,31 +30,34 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film updateFilm(Film film) {
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-            return film;
+    public Optional<Film> updateFilm(Film film) {
+        Integer filmId = film.getId();
+        if (isExist(filmId)) {
+            films.put(filmId, film);
+            return Optional.of(film);
         } else {
-            log.error("Не удалось поместить фильм");
-            throw new InvalidIdException(String.format("Фильм с ID:`%d` не обновлён", film.getId()), HttpStatus.NOT_FOUND);
+            return Optional.empty();
         }
     }
 
     @Override
-    public void deleteById(Integer id1) {
-            films.remove(id1);
+    public void deleteById(Integer id) {
+            films.remove(id);
     }
 
     @Override
-    public Film findById(Integer id1) {
-        return films.get(id1);
+    public Optional<Film> findById(Integer id) {
+        if (isExist(id)) {
+            return Optional.of(films.get(id));
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<Film> findMostPopularFilms(Integer count) {
-        return films.values()
-                .stream()
+        return films.values().stream()
                 .sorted(Comparator.comparingInt(value -> -value.getLikes().size()))
+                .limit(count)
                 .collect(Collectors.toList());
     }
 

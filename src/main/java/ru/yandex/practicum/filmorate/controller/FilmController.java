@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.service.FilmService;
 import java.util.Collection;
 import java.util.List;
 
+import static ru.yandex.practicum.filmorate.constant.FilmConstants.COUNT_OF_POPULAR_FILMS;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +19,7 @@ public class FilmController {
     private final FilmService service;
 
     @GetMapping
-    public Collection<Film> findAllFilms() {
+    public List<Film> findAllFilms() {
         return service.findAllFilms();
     }
 
@@ -42,17 +44,17 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> findMostPopularFilms(@RequestParam(name = "count", defaultValue = "10") Integer count) {
+    public List<Film> findMostPopularFilms(@RequestParam(name = "count", defaultValue = COUNT_OF_POPULAR_FILMS) Integer count) {
         return service.findMostPopularFilms(count);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public boolean addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        return service.addLike(id, userId);
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+         service.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public boolean removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        return service.removeLike(id, userId);
+    public void removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
+         service.removeLike(id, userId);
     }
 }

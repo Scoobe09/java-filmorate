@@ -12,24 +12,24 @@ import javax.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class HandlerException {
 
-    @ExceptionHandler
+    @ExceptionHandler(InvalidIdException.class)
     public ResponseEntity<ErrorResponse> notFound(InvalidIdException exp) {
         log.error("Ваш параметр не найден. {}", exp.getMessage());
         return new ResponseEntity<>(ErrorResponse.builder()
                 .message(exp.getMessage())
-                .build(), HttpStatus.NOT_FOUND);
+                .build(),exp.getHttpStatus());
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> notFound(ValidateException exp) {
+    @ExceptionHandler(ValidateException.class)
+    public ResponseEntity<ErrorResponse> onValidateException(ValidateException exp) {
         log.error("Неверные данные. {}", exp.getMessage());
         return new ResponseEntity<>(ErrorResponse.builder()
                 .message(exp.getMessage())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build(), exp.getHttpStatus());
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> notFound(ConstraintViolationException exp) {
+    public ResponseEntity<ErrorResponse> onConstraintViolationException(ConstraintViolationException exp) {
         log.error("Невалидные данные. {}", exp.getMessage());
         return new ResponseEntity<>(ErrorResponse.builder()
                 .message(exp.getMessage())

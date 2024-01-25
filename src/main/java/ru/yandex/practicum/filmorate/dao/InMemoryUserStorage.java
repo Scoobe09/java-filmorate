@@ -20,15 +20,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> findAllUsers() {
+    public List<User> findAllUsers() {
         log.info("Получен список всех пользователей.");
-        return users.values();
+        return new ArrayList<>(users.values());
 
     }
 
     @Override
     public User createUser(User user) {
-        validateName(user);
         user.setId(generateId());
         users.put(user.getId(), user);
         log.info("Создали пользователя");
@@ -36,25 +35,25 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User updateUser(User user) {
-        validateName(user);
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            return user;
+    public Optional<User> updateUser(User user) {
+        Integer userId = user.getId();
+        if (isExist(userId)) {
+            users.put(userId, user);
+            return Optional.of(user);
         } else {
-            throw new InvalidIdException(String.format("Пользователь с ID:`%d` не обновлён", user.getId()), HttpStatus.NOT_FOUND);
+            return Optional.empty();
         }
     }
 
     @Override
-    public void deleteById(Integer id1) {
-            users.remove(id1);
+    public void deleteById(Integer id) {
+        users.remove(id);
     }
 
     @Override
-    public Optional<User> findById(Integer id1) {
-        if(isExist(id)) {
-            return Optional.of(users.get(id1));
+    public Optional<User> findById(Integer id) {
+        if (isExist(id)) {
+            return Optional.of(users.get(id));
         }
         return Optional.empty();
     }
@@ -87,15 +86,8 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(userId).getFriends().remove(idFriend) && users.get(idFriend).getFriends().remove(userId);
     }
 
-    private void validateName(User user) {
-        String name = user.getName();
-        if (name == null || name.isEmpty()) {
-            user.setName(user.getLogin());
-            log.info("Имя не задано, присвоено значение логина");
-        }
-    }
     @Override
-    public boolean isExist(Integer id){
+    public boolean isExist(Integer id) {
         return users.containsKey(id);
     }
 }

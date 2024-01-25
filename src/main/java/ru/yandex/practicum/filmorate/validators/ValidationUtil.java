@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidateException;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -27,6 +28,14 @@ public class ValidationUtil {
                 throw new ValidateException("The transmitted request in JSON format is not valid, validation error: " +
                         string);
             }
+        }
+    }
+
+    public void validateName(User user) {
+        String name = user.getName();
+        if (name == null || name.isEmpty()) {
+            user.setName(user.getLogin());
+            log.info("Имя не задано, присвоено значение логина");
         }
     }
 }

@@ -1,75 +1,24 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dao.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.validators.ValidationUtil;
 
 import java.util.Collection;
 import java.util.List;
 
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class FilmService implements FilmServiceIn {
+public interface FilmService {
+     List<Film> findAllFilms();
 
-    private final InMemoryFilmStorage film;
-    private final ValidationUtil valid;
+     Film createFilm(Film film);
 
-    @Override
-    public Collection<Film> findAllFilms() {
-        log.info("Получен список всех фильмов.");
-        return film.findAllFilms();
-    }
+     Film updateFilm(Film film);
 
-    @Override
-    public Film createFilm(Film film1) {
-        valid.getRequiestValid(film1);
-        log.info("Добавили фильм.");
-        return film.createFilm(film1);
-    }
+     void deleteById(Integer id);
 
-    @Override
-    public Film updateFilm(Film film1) {
-        valid.getRequiestValid(film1);
-        log.info("Поместили фильм");
-        return film.updateFilm(film1);
-    }
+     Film findById(Integer id);
 
-    @Override
-    public void deleteById(Integer id) {
-        log.info("Получен запрос на удаление фильма.");
-        if(!film.isExist(id)){
-            throw new InvalidIdException("Не получиилось удалить фильм.", HttpStatus.NOT_FOUND);
-        }
-        film.deleteById(id);
-    }
+     List<Film> findMostPopularFilms(Integer count);
 
-    @Override
-    public Film findById(Integer id) {
-        log.info("Получен фильм");
-        return film.findById(id);
-    }
+     void addLike(Integer filmId, Integer userId);
 
-    @Override
-    public List<Film> findMostPopularFilms(Integer count) {
-        log.info("Получено 10 самых популярных фильмов");
-        return film.findMostPopularFilms(count);
-    }
-
-    @Override
-    public boolean addLike(Integer filmId, Integer userId) {
-        log.info("Добавлен лайк");
-        return film.addLike(filmId, userId);
-    }
-
-    @Override
-    public boolean removeLike(Integer filmId, Integer userId) {
-        log.info("Лайк удалён");
-        return film.removeLike(filmId, userId);
-    }
+     void removeLike(Integer filmId, Integer userId);
 }
