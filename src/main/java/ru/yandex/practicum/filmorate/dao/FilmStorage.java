@@ -19,9 +19,5 @@ public interface FilmStorage {
 
     List<Film> findMostPopularFilms(Integer count);
 
-    boolean addLike(Integer filmId, Integer userId);
-
-    boolean removeLike(Integer filmId, Integer userId);
-
     boolean isExist(Integer id);
 }

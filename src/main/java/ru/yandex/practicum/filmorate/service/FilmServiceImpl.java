@@ -23,36 +23,41 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<Film> findAllFilms() {
+        log.info("Запрос на получение списка всех фильмов.");
         log.info("Получен список всех фильмов.");
         return filmStorage.findAllFilms();
     }
 
     @Override
     public Film createFilm(Film film) {
+        log.info("Запрос на создание фильма: ID - `{}` Название - `{}`", film.getId(), film.getName());
         valid.getRequiestValid(film);
-        log.info("Добавили фильм.");
-        return this.filmStorage.createFilm(film);
+        log.info("Фильм создан: ID - `{}` Название - `{}`", film.getId(), film.getName());
+        return filmStorage.createFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
+        log.info("Запрос на обновление фильма — `{}` Название – `{}`", film.getId(), film.getName());
         valid.getRequiestValid(film);
-        log.info("Поместили фильм");
-        return this.filmStorage.updateFilm(film).orElseThrow(() -> new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND));
+        log.info("Фильм обновлен: ID — `{}` Название – `{}`", film.getId(), film.getName());
+        return filmStorage.updateFilm(film).orElseThrow(() -> new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND));
     }
 
     @Override
     public void deleteById(Integer id) {
-        log.info("Получен запрос на удаление фильма.");
+        log.info("Получен запрос на удаление фильма по ID - `{}`", id);
         if (!filmStorage.isExist(id)) {
             throw new InvalidIdException("Не получиилось удалить фильм.", HttpStatus.NOT_FOUND);
         }
         filmStorage.deleteById(id);
+        log.info("Фильм с ID - `{}` удалён", id);
     }
 
     @Override
     public Film findById(Integer id) {
-        log.info("Получен фильм");
+        log.info("Запрос на получение фильма по ID - `{}`", id);
+        log.info("Получен фильм: ID - `{}`", id);
         return filmStorage.findById(id).orElseThrow(() -> new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND));
     }
 
@@ -64,20 +69,22 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void addLike(Integer filmId, Integer userId) {
+        log.info("Поступил запрос на добавление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.addLike(filmId, userId)) {
+        if (!filmStorage.findById(filmId).get().getLikes().add(userId)) {
             throw new InvalidIdException("Лайк уже существует", HttpStatus.BAD_REQUEST);
         }
-        log.info("Добавлен лайк");
+        log.info("Добавлен лайк к фильму с ID - `{}`", filmId);
     }
 
     @Override
     public void removeLike(Integer filmId, Integer userId) {
+        log.info("Поступил запрос на удаление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.removeLike(filmId, userId)) {
+        if (!filmStorage.findById(filmId).get().getLikes().remove(userId)) {
             throw new InvalidIdException("Лайка не существует", HttpStatus.BAD_REQUEST);
         }
-        log.info("Лайк удалён");
+        log.info("Удалён лайк к фильму с ID - `{}`", filmId);
     }
 
     private void checkId(Integer filmId, Integer userId) {

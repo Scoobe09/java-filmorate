@@ -62,16 +62,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean addLike(Integer filmId, Integer userId) {
-        return films.get(filmId).getLikes().add(userId);
-    }
-
-    @Override
-    public boolean removeLike(Integer filmId, Integer userId) {
-        return films.get(filmId).getLikes().remove(userId);
-    }
-
-    @Override
     public boolean isExist(Integer id) {
         return films.containsKey(id);
     }
