@@ -4,11 +4,11 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class InvalidIdException extends RuntimeException {
+public class ValidateException extends RuntimeException {
     private final HttpStatus httpStatus;
 
-    public InvalidIdException(String message, HttpStatus httpStatus) {
+    public ValidateException(String message) {
         super(message);
-        this.httpStatus = httpStatus;
+        httpStatus = HttpStatus.BAD_REQUEST;
     }
 }
