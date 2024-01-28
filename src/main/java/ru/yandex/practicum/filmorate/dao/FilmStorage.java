@@ -15,7 +15,7 @@ public interface FilmStorage {
 
     void deleteById(Integer id);
 
-    Optional<Film> findById(Integer id);
+    Film findById(Integer id);
 
     List<Film> findMostPopularFilms(Integer count);
 

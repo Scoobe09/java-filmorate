@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validators.ValidationUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,16 +60,22 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer id) {
         log.info("Запрос на получение пользователя по ID - `{}`", id);
         log.info("Получен пользователь: ID - `{}`", id);
-        return storage.findById(id).orElseThrow(() -> new InvalidIdException("Не удалось найти пользователя", HttpStatus.NOT_FOUND));
+        if (!storage.isExist(id)) {
+            throw new InvalidIdException("Не удалось найти пользователя", HttpStatus.NOT_FOUND);
+        }
+        return storage.findById(id);
     }
 
     @Override
     public void addFriend(Integer userId, Integer idFriend) {
         log.info("Получен запрос на добавление пользователя с ID - `{}` в друзья пользователя с ID - `{}`", userId, idFriend);
         checkId(userId, idFriend);
-        if (!storage.findById(userId).get().getFriends().add(idFriend) && !storage.findById(idFriend).get().getFriends().add(userId)) {
+        boolean addedFriendUser = storage.findById(userId).getFriends().add(idFriend);
+        storage.findById(idFriend).getFriends().add(userId);
+        if (!addedFriendUser) {
             throw new InvalidIdException("Пользователи уже друзья", HttpStatus.BAD_REQUEST);
         }
+
         log.info("Друг добавлен: ID - `{}`", idFriend);
     }
 
@@ -76,10 +83,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getUserFriends(Integer id) {
         log.info("Запрос списка друзей пользователя с ID — `{}`", id);
         if (storage.isExist(id)) {
-            User user = storage.findById(id).orElseThrow(()-> new InvalidIdException());
-            return storage.findById(id).get().getFriends()
+            return storage.findById(id).getFriends()
                     .stream()
-                    .map()
+                    .map(storage::findById)
                     .collect(Collectors.toList());
         }
         throw new InvalidIdException("Не найден пользователь", HttpStatus.NOT_FOUND);
@@ -90,7 +96,12 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на список общих друзей пользователей с идентификаторами `{}` и `{}`.", userId, idFriend);
         checkId(userId, idFriend);
         log.info("Получен список общих друзей");
-        return storage.findMutualFriends(userId, idFriend);
+        List<Integer> friendsId = new ArrayList<>(storage.findById(userId).getFriends());
+        return storage.findById(idFriend).getFriends()
+                .stream()
+                .filter(friendsId::contains)
+                .map(storage::findById)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -98,7 +109,7 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на удаление пользователя с ID - `{}`" +
                 "из списка друзей пользователя с ID - `{}`.", userId, idFriend);
         checkId(userId, idFriend);
-        if (!storage.removeFriend(userId, idFriend)) {
+        if (!storage.findById(userId).getFriends().remove(idFriend) && !storage.findById(idFriend).getFriends().remove(userId)) {
             throw new InvalidIdException("Не являются друзьями", HttpStatus.BAD_REQUEST);
         }
         log.info("Друг удалён: ID - `{}`", idFriend);

@@ -15,15 +15,7 @@ public interface UserStorage {
 
     void deleteById(Integer id);
 
-    Optional<User> findById(Integer id);
-
-    boolean addFriend(Integer userId, Integer idFriend);
-
-    List<User> getUserFriends(Integer id);
-
-    List<User> findMutualFriends(Integer userId, Integer idFriendShip);
-
-    boolean removeFriend(Integer userId, Integer idFriend);
+    User findById(Integer id);
 
     boolean isExist(Integer id);
 }

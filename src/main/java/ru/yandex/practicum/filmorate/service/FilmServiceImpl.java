@@ -58,7 +58,10 @@ public class FilmServiceImpl implements FilmService {
     public Film findById(Integer id) {
         log.info("Запрос на получение фильма по ID - `{}`", id);
         log.info("Получен фильм: ID - `{}`", id);
-        return filmStorage.findById(id).orElseThrow(() -> new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND));
+        if (filmStorage.isExist(id)) {
+            return filmStorage.findById(id);
+        }
+        throw new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class FilmServiceImpl implements FilmService {
     public void addLike(Integer filmId, Integer userId) {
         log.info("Поступил запрос на добавление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.findById(filmId).get().getLikes().add(userId)) {
+        if (!filmStorage.findById(filmId).getLikes().add(userId)) {
             throw new InvalidIdException("Лайк уже существует", HttpStatus.BAD_REQUEST);
         }
         log.info("Добавлен лайк к фильму с ID - `{}`", filmId);
@@ -81,7 +84,7 @@ public class FilmServiceImpl implements FilmService {
     public void removeLike(Integer filmId, Integer userId) {
         log.info("Поступил запрос на удаление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.findById(filmId).get().getLikes().remove(userId)) {
+        if (!filmStorage.findById(filmId).getLikes().remove(userId)) {
             throw new InvalidIdException("Лайка не существует", HttpStatus.BAD_REQUEST);
         }
         log.info("Удалён лайк к фильму с ID - `{}`", filmId);

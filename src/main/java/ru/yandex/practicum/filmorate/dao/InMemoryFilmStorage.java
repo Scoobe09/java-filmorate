@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.InvalidIdException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -46,11 +48,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> findById(Integer id) {
+    public Film findById(Integer id) {
         if (isExist(id)) {
-            return Optional.of(films.get(id));
+            return films.get(id);
         }
-        return Optional.empty();
+        throw new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND);
     }
 
     @Override
