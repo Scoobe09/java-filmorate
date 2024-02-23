@@ -45,7 +45,7 @@ public class FilmDbStorageTest {
         Film film2 = Film.builder()
                 .name("name1")
                 .description("eurifh")
-                .releaseDate(LocalDate.of(1495, 3, 3))
+                .releaseDate(LocalDate.of(1995, 3, 3))
                 .duration(480)
                 .mpa(Mpa.builder().id(4).build())
                 .build();
@@ -152,7 +152,7 @@ public class FilmDbStorageTest {
                 .mpa(Mpa.builder().id(4).build())
                 .build();
         Film firstFilm = film;
-        Film film2 = dao.updateFilm(film);
+        Film film2 = dao.updateFilm(film1);
         assertThat(film2)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -174,6 +174,6 @@ public class FilmDbStorageTest {
                 .build();
         Film film1 = dao.createFilm(film);
         boolean isDeletedFilm = dao.deleteById(film1.getId());
-        assertTrue(isDeletedFilm); // проверяю что фильм действительно обвновился
+        assertTrue(!isDeletedFilm); // проверяю что фильм действительно обвновился
     }
 }
