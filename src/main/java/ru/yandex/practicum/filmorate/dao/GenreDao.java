@@ -16,9 +16,8 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreDao {
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public Optional<Genre> findById(Integer id) {
         String sqlQuery = "SELECT * FROM genres WHERE id = ? ";

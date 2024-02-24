@@ -15,9 +15,8 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MpaService {
-    MpaDao mpaDao;
+    private final MpaDao mpaDao;
 
     public Mpa getMpa(Integer id) {
         log.info(String.format("Mpa with id %d founded ", id));

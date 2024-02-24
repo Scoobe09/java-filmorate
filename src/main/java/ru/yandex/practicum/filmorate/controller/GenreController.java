@@ -16,9 +16,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/genres")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreController {
-    GenreService genreService;
+   private final GenreService genreService;
 
     @GetMapping("/{id}")
     public Genre getGenre(@PathVariable Integer id) {

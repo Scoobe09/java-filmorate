@@ -17,9 +17,8 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MpaDao {
-    JdbcTemplate jdbcTemplate;
+   private final JdbcTemplate jdbcTemplate;
 
     public Optional<Mpa> findById(Integer id) {
         String sqlQuery = "SELECT * FROM mpa WHERE id = ? ";

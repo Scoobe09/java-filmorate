@@ -35,7 +35,7 @@ public class FilmDbStorage implements FilmStorage {
                 "         LEFT JOIN genres AS g ON g.id = fg.genre_id ";
 
         Map<Integer, Film> films = new HashMap<>();
-        List<Film> str = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> {
+        List<Film> filmsFromDb  = jdbcTemplate.query(sqlQuery, (resultSet, rowNum) -> {
             Film film = mapRowToFilm(resultSet, rowNum);
             Integer filmId = film.getId();
             if (!films.containsKey(filmId)) {
@@ -50,7 +50,7 @@ public class FilmDbStorage implements FilmStorage {
             return film;
         });
 
-        return str.stream().sorted(Comparator.comparing(Film::getId)).collect(Collectors.toList());
+        return filmsFromDb .stream().sorted(Comparator.comparing(Film::getId)).collect(Collectors.toList());
     }
 
     private void saveGenre(Film film) {

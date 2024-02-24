@@ -16,9 +16,8 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GenreService {
-    GenreDao genreDao;
+    private final GenreDao genreDao;
 
     public Genre getGenre(Integer id) {
         log.info("Request to receive the user has benn received");

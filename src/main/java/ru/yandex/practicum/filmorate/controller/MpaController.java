@@ -16,9 +16,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mpa")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MpaController {
-    MpaService mpaService;
+   private final MpaService mpaService;
 
     @GetMapping("/{id}")
     public Mpa getMpa(@PathVariable Integer id) {
