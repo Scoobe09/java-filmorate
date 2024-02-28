@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dao;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FilmStorage {
 
@@ -11,13 +10,17 @@ public interface FilmStorage {
 
     Film createFilm(Film film);
 
-    Optional<Film> updateFilm(Film film);
+    Film updateFilm(Film film);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
 
     Film findById(Integer id);
 
     List<Film> findMostPopularFilms(Integer count);
 
     boolean isExist(Integer id);
+
+    boolean addLike(Integer filmId, Integer userId);
+
+    boolean deleteLike(Integer filmId, Integer userId);
 }

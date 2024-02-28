@@ -17,7 +17,7 @@ import java.util.Set;
  */
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Film {
     private Integer id;
     @NotBlank(message = "Название фильма не может быть пустым")
@@ -28,6 +28,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Число должно быть положительное")
     private int duration;
-
+    private Mpa mpa;
     private final Set<Integer> likes = new HashSet<>();
+    private Set<Genre> genres;
 }

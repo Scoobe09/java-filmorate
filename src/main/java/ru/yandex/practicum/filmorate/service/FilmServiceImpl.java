@@ -21,6 +21,7 @@ public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final ValidationUtil valid;
 
+
     @Override
     public List<Film> findAllFilms() {
         log.info("Запрос на получение списка всех фильмов.");
@@ -41,7 +42,7 @@ public class FilmServiceImpl implements FilmService {
         log.info("Запрос на обновление фильма — `{}` Название – `{}`", film.getId(), film.getName());
         valid.getRequiestValid(film);
         log.info("Фильм обновлен: ID — `{}` Название – `{}`", film.getId(), film.getName());
-        return filmStorage.updateFilm(film).orElseThrow(() -> new InvalidIdException("Не удалось найти фильм", HttpStatus.NOT_FOUND));
+        return filmStorage.updateFilm(film);
     }
 
     @Override
@@ -74,7 +75,8 @@ public class FilmServiceImpl implements FilmService {
     public void addLike(Integer filmId, Integer userId) {
         log.info("Поступил запрос на добавление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.findById(filmId).getLikes().add(userId)) {
+        boolean addedLike = filmStorage.addLike(filmId, userId);
+        if (!addedLike) {
             throw new InvalidIdException("Лайк уже существует", HttpStatus.BAD_REQUEST);
         }
         log.info("Добавлен лайк к фильму с ID - `{}`", filmId);
@@ -84,7 +86,8 @@ public class FilmServiceImpl implements FilmService {
     public void removeLike(Integer filmId, Integer userId) {
         log.info("Поступил запрос на удаление лайка к фильму с ID - `{}` пользователем с ID - `{}`.", filmId, userId);
         checkId(filmId, userId);
-        if (!filmStorage.findById(filmId).getLikes().remove(userId)) {
+        boolean deletedLike = filmStorage.deleteLike(filmId, userId);
+        if (!deletedLike) {
             throw new InvalidIdException("Лайка не существует", HttpStatus.BAD_REQUEST);
         }
         log.info("Удалён лайк к фильму с ID - `{}`", filmId);

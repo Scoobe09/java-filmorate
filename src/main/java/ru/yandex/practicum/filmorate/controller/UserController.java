@@ -20,7 +20,6 @@ public class UserController {
     @GetMapping
     public Collection<User> findAllUsers() {
         return userService.findAllUsers();
-
     }
 
     @PostMapping

@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.dao;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserStorage {
 
@@ -11,11 +10,19 @@ public interface UserStorage {
 
     User createUser(User user);
 
-    Optional<User> updateUser(User user);
+    User updateUser(User user);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
 
     User findById(Integer id);
 
     boolean isExist(Integer id);
+
+    List<User> getUserFriends(Integer id);
+
+    List<User> findMutualFriends(Integer userId, Integer idFriend);
+
+    boolean addFriend(Integer userId, Integer idFriend);
+
+    boolean removeFriend(Integer userId, Integer idFriend);
 }
